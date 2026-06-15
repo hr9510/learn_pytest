@@ -39,10 +39,19 @@ def fixture_setup_and_teardown(request):
 
 from app import create_app, db
 
+from app import create_app, db
 
-app = create_app()
+@pytest.fixture(scope="session")
+def app():
+    """Create and configure a test app instance."""
+    app = create_app()
+    # Configure the test database
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+    app.config['TESTING'] = True
+    return app
+
 @pytest.fixture(scope="class")
-def init_database():
+def init_database(app):
     with app.app_context():
         db.create_all()  # create tables
         yield db  # return the database object to the test function
@@ -51,14 +60,10 @@ def init_database():
         db.session.rollback()
         db.session.remove()
 
-
-@pytest.fixture(scope="function") #creating fixture for flask app testing to reduce redundancy and increase reusability
-def client():
+@pytest.fixture(scope="function")
+def client(app):
     with app.test_client() as client:
-        yield client  # here yield is used to return the client object to the test function and then after the test function is executed, it will continue with any code written after yield (if any) for teardown or cleanup purposes.
-
-
-
+        yield client
 
 
 # from running import app, db
