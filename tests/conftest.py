@@ -41,36 +41,32 @@ from app import create_app, db
 
 from app import create_app, db
 
-import pytest
-from app import create_app, db
 
 @pytest.fixture(scope="function")
 def app():
-    """Create and configure a test app instance."""
+    """Create and configure a test app."""
     app = create_app()
+    
+    # Configure test database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
     app.config['TESTING'] = True
+    
     with app.app_context():
         db.create_all()
         yield app
         db.session.remove()
         db.drop_all()
 
-@pytest.fixture(scope="function")
-def init_database(app):
-    """Initialize database for each test function."""
-    with app.app_context():
-        db.create_all()
-        yield db
-        db.session.rollback()
-        db.drop_all()
-
-@pytest.fixture(scope="function")
+@pytest.fixture
 def client(app):
-    """Create a test client."""
+    """Test client for making requests."""
+    return app.test_client()
+
+@pytest.fixture
+def init_database(app):
+    """Initialize database for tests."""
     with app.app_context():
-        with app.test_client() as test_client:
-            yield test_client
+        yield db
 
 # from running import app, db
 # @pytest.fixture(scope="function")
