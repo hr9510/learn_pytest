@@ -44,7 +44,7 @@ from app import create_app, db
 import pytest
 from app import create_app, db
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def app():
     """Create and configure a test app instance."""
     app = create_app()
@@ -56,7 +56,7 @@ def app():
         db.session.remove()
         db.drop_all()
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def init_database(app):
     """Initialize database for each test function."""
     with app.app_context():
