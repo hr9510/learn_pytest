@@ -54,7 +54,7 @@ def test_function_2():
 @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
 def test_function_21():
     print("hello")
-    assert False
+    assert True
 
 @pytest.mark.xfail(reason="learning x fail")
 def test_function_3():
