@@ -38,6 +38,8 @@ def fixture_setup_and_teardown(request):
 
 
 from app import create_app, db
+
+
 app = create_app()
 @pytest.fixture(scope="class")
 def init_database():
