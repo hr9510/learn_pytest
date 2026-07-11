@@ -62,7 +62,7 @@ def test_function_3():
     assert False
 
 @pytest.mark.xfail(reason="test_user_defined_marker hyundai")
-@pytest.mark.hyundai() #USER DEFINED MARKER
+# @pytest.mark.hyundai() #USER DEFINED MARKER
 def test_function_6():
     print("test_function_6")
     assert True

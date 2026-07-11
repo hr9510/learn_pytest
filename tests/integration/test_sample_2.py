@@ -43,7 +43,7 @@ def make_payment(service, amount):
     return service.charge(amount)
 
 
-@pytest.mark.hello
+# @pytest.mark.hello
 def test_make_payment():
     fake_service = Mock()
 
@@ -59,7 +59,7 @@ def test_make_payment():
 # 2.assert_called_with
 # 3.side_effect
 
-@pytest.mark.hello
+# @pytest.mark.hello
 def test_payment_failure():
     fake_service = Mock()
 
@@ -113,7 +113,7 @@ class FakeEmailService:
     def send(self, email):
         print("FAKE email sent", "Fake Email Service")
 
-@pytest.mark.newMark
+# @pytest.mark.newMark
 def test_register_user(mocker):
     mocker.patch("test_sample_2.EmailService.send", return_value=True)
     result = register_user("test@gmail.com")
@@ -345,7 +345,7 @@ class Test_Basic_app:
 ##################################JWT Authentication Testing
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-@pytest.mark.Auth()
+@pytest.mark.auth
 class Test_Authentication:
     def test_auth(self, client, init_database):
         
@@ -414,7 +414,7 @@ class Test_Authentication:
 #             user_factory.py
 #         test_auth.py
 
-@pytest.mark.Integration()
+@pytest.mark.integration
 class Test_Factory:
     def test_register_with_factory(self, client, init_database):
         from tests.factories.user_factory import UserFactory
@@ -476,7 +476,7 @@ class FakeUser:
         self.username = username
         self.password = password
 
-@pytest.mark.service()
+@pytest.mark.service
 class Test_Service_Layer_Again:
 
     def test_register_user_success(self, fake_repo):
@@ -623,7 +623,7 @@ class Test_Service_Layer_Again:
         assert result is None
         
 
-# @pytest.mark.service()
+# @pytest.mark.service
 # class Test_Service_Layer:#TESTING SERVICE LAYER WITH MOCK REPOSITORY,BUT THIS IS NOT REAL WAY TO IMPLEMENT SERVICE LAYER TESTING
 
 #     user_name = "serviceuser"
@@ -699,7 +699,7 @@ from app.repositories.user_repository import UserRepository
 # ├── test_auth_service.py
 # ├── test_user_routes.py
 
-@pytest.mark.repo()
+@pytest.mark.repo
 class Test_Repository_Layer:
 
 # repository ka kaam hi DB access hai.
@@ -762,7 +762,7 @@ class Test_Repository_Layer:
 # OR
 # Fixture issue
 
-@pytest.mark.integration()
+@pytest.mark.integration
 def test_testing():
     fake_repo = Mock()
 
@@ -841,7 +841,7 @@ def test_registering_user():
 def is_even(num):
     return num % 2 == 0
 
-@pytest.mark.even
+# @pytest.mark.even
 @pytest.mark.parametrize("number" , [2, 4, 6, 8, 10, 14])
 def test_is_even(number):
     result = is_even(number)
@@ -853,7 +853,7 @@ def test_is_even(number):
     assert result == True
 
 
-@pytest.mark.even
+# @pytest.mark.even
 @pytest.mark.parametrize("a , b, expected" , [(1, 2, 3), (2, 3, 5), (3, 5, 8)])
 def test_addition(a, b, expected):
     result = a + b

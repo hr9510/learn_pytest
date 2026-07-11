@@ -44,13 +44,7 @@ from app import create_app, db
 
 @pytest.fixture(scope="function")
 def app():
-    """Create and configure a test app."""
-    app = create_app()
-    
-    # Configure test database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-    app.config['TESTING'] = True
-    
+    app = create_app()    
     with app.app_context():
         db.create_all()
         yield app
@@ -59,12 +53,10 @@ def app():
 
 @pytest.fixture
 def client(app):
-    """Test client for making requests."""
     return app.test_client()
 
 @pytest.fixture
 def init_database(app):
-    """Initialize database for tests."""
     with app.app_context():
         yield db
 
