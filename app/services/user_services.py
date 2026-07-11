@@ -1,7 +1,6 @@
 from app.models.user import User
 from app.extensions.extensions import db
 from flask import jsonify
-from app.repositories.user_repository import UserRepository
 from flask_jwt_extended import create_access_token
 
 class UserService:

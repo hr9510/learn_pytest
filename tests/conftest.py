@@ -27,7 +27,7 @@ import pytest
 #     print("Package Teardown")
 
 ################### CREATING FIXTURE IN CONFTEST.PY AND USE IT IN THE TEST
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def fixture_setup_and_teardown(request):
     driver = "i'm the driver"
     print("Fixture Setup")
@@ -37,7 +37,7 @@ def fixture_setup_and_teardown(request):
 
 
 
-from app import create_app, db
+
 
 from app import create_app, db
 

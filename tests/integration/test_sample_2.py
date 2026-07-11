@@ -19,30 +19,31 @@ from unittest.mock import Mock, patch, MagicMock
 
 ################### CREATING FIXTURE IN CONFTEST.PY AND USE IT IN THE TEST
 
-# @pytest.mark.usefixtures("fixture_setup_and_teardown")
+@pytest.mark.usefixtures("fixture_setup_and_teardown")
 
-# class Test_ficture_2:
+class Test_ficture_2:
 
-#     def test_fixture_3(self):
-#         driver = "i'm the driver"
-#         print("test_fixture_3")
-#         assert driver == self.driver
+    def test_fixture_3(self):
+        driver = "i'm the driver"
+        print("test_fixture_3")
+        assert driver == self.driver
     
-#     def test_fixture_4(self):
-#         driver = "i'm the driver"
-#         print("test_fixture_4")
-#         assert driver == self.driver
+    def test_fixture_4(self):
+        driver = "i'm the driver"
+        print("test_fixture_4")
+        assert driver == self.driver
 
 #############################################################################################################
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # Monkeypatch : replace existing real thing.
 # Mock : create fake object from scratch.
 
-
 def make_payment(service, amount):
     print(service.charge(amount), "make_payment_test")
     return service.charge(amount)
 
+
+@pytest.mark.hello
 def test_make_payment():
     fake_service = Mock()
 
@@ -58,6 +59,7 @@ def test_make_payment():
 # 2.assert_called_with
 # 3.side_effect
 
+@pytest.mark.hello
 def test_payment_failure():
     fake_service = Mock()
 
@@ -90,7 +92,6 @@ def test_get_name():
 
 
 # from email_service import EmailService
-@pytest.mark.service()
 class EmailService():
     def __init__(self):
         self.sent_emails = []
@@ -108,7 +109,6 @@ def register_user(email):
     else:
         return "Failed to register user"
 
-@pytest.mark.service()
 class FakeEmailService:
     def send(self, email):
         print("FAKE email sent", "Fake Email Service")
@@ -144,7 +144,6 @@ def test_register_user(mocker):
 # Normal patch : Replace whole class/object.
 # patch.object : Replace specific method/attribute inside object as per requirements.
 
-@pytest.mark.service()
 class PaymentService:
     def charge(self, amount):
         print("REAL payment happening", "Payment Service")
@@ -177,7 +176,6 @@ def test_make_payment_2():
 # methods
 # API calls
 
-@pytest.mark.service()
 def test_magic_mock():
     fake_service = MagicMock()
 
@@ -207,7 +205,7 @@ def test_magic_mock():
 # missing fields
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\
 
-@pytest.mark.service()
+@pytest.mark.integration
 class Test_Basic_app:
     def test_home(self, client, init_database):
         response = client.get("/")
@@ -347,7 +345,7 @@ class Test_Basic_app:
 ##################################JWT Authentication Testing
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-@pytest.mark.service()
+@pytest.mark.Auth()
 class Test_Authentication:
     def test_auth(self, client, init_database):
         
@@ -416,7 +414,7 @@ class Test_Authentication:
 #             user_factory.py
 #         test_auth.py
 
-@pytest.mark.service()
+@pytest.mark.Integration()
 class Test_Factory:
     def test_register_with_factory(self, client, init_database):
         from tests.factories.user_factory import UserFactory
@@ -463,7 +461,7 @@ class Test_Factory:
 
 from app.services.user_services import UserService
 
-@pytest.fixture(scope="module") #USING THIS FIXTURE IN SERVICE LAYER TESTING TO CREATE A FAKE REPOSITORY FOR ALL TESTS IN THE MODULE, SO THAT WE CAN USE THE SAME FAKE REPOSITORY IN ALL TESTS AND AVOID DUPLICATE CODE OF CREATING FAKE REPOSITORY IN EACH TEST.   
+@pytest.fixture(scope="function") #USING THIS FIXTURE IN SERVICE LAYER TESTING TO CREATE A FAKE REPOSITORY FOR ALL TESTS IN THE MODULE, SO THAT WE CAN USE THE SAME FAKE REPOSITORY IN ALL TESTS AND AVOID DUPLICATE CODE OF CREATING FAKE REPOSITORY IN EACH TEST.   
 def fake_repo():
     return Mock()
 
@@ -625,70 +623,70 @@ class Test_Service_Layer_Again:
         assert result is None
         
 
-@pytest.mark.service()
-class Test_Service_Layer:#TESTING SERVICE LAYER WITH MOCK REPOSITORY,BUT THIS IS NOT REAL WAY TO IMPLEMENT SERVICE LAYER TESTING BECAUSE WE ARE MOCKING REPOSITORY WHICH IS INTERNAL DEPENDENCY OF SERVICE LAYER, IN REALITY WE SHOULD USE REAL REPOSITORY WITH REAL TEST DATABASE TO TEST SERVICE LAYER BUT HERE WE ARE JUST DEMONSTRATING HOW MOCK WORKS IN SERVICE LAYER TESTING.
+# @pytest.mark.service()
+# class Test_Service_Layer:#TESTING SERVICE LAYER WITH MOCK REPOSITORY,BUT THIS IS NOT REAL WAY TO IMPLEMENT SERVICE LAYER TESTING
 
-    user_name = "serviceuser"
-    password = "servicepass"
-    update_user_name = "serviceuser"
-    update_password = "servicepass"
+#     user_name = "serviceuser"
+#     password = "servicepass"
+#     update_user_name = "serviceuser"
+#     update_password = "servicepass"
 
-    def test_register_user_service(self):
-        fake_repo = Mock()
+#     def test_register_user_service(self):
+#         fake_repo = Mock()
 
-        fake_repo.register_user.return_value = f"User {self.user_name} registered successfully", None, 201
+#         fake_repo.register_user.return_value = f"User {self.user_name} registered successfully", None, 201
 
-        result, error, status = fake_repo.register_user(self.user_name, self.password)
+#         result, error, status = fake_repo.register_user(self.user_name, self.password)
 
-        print(result, error, status, "Test Register User Service")
-        assert error is None
-        assert status == 201
-        assert result == f"User {self.user_name} registered successfully"
+#         print(result, error, status, "Test Register User Service")
+#         assert error is None
+#         assert status == 201
+#         assert result == f"User {self.user_name} registered successfully"
 
-    def test_login_user_service(self):
-        fake_repo = Mock()
+#     def test_login_user_service(self):
+#         fake_repo = Mock()
 
-        fake_repo.login_user.return_value = f"Logged in as {self.user_name}", None, 200
+#         fake_repo.login_user.return_value = f"Logged in as {self.user_name}", None, 200
 
-        result, error, status = fake_repo.login_user(self.user_name, self.password)
+#         result, error, status = fake_repo.login_user(self.user_name, self.password)
 
-        print(result, error, status, "Test Login User Service")
-        assert error is None
-        assert status == 200
-        assert result == f"Logged in as {self.user_name}"
+#         print(result, error, status, "Test Login User Service")
+#         assert error is None
+#         assert status == 200
+#         assert result == f"Logged in as {self.user_name}"
 
-    def test_get_user_service(self):
-        fake_repo = Mock()
-        fake_repo.get_user_service.return_value = [{"id": 1, "username": self.user_name}], None, 200
+#     def test_get_user_service(self):
+#         fake_repo = Mock()
+#         fake_repo.get_user_service.return_value = [{"id": 1, "username": self.user_name}], None, 200
 
-        result, error, status = fake_repo.get_user_service()
+#         result, error, status = fake_repo.get_user_service()
 
-        print(result, error, status, "Test Get User Service")
-        assert error is None
-        assert status == 200
-        assert result == [{"id": 1, "username": self.user_name}]
+#         print(result, error, status, "Test Get User Service")
+#         assert error is None
+#         assert status == 200
+#         assert result == [{"id": 1, "username": self.user_name}]
 
-    def test_update_user_service(self):
-        fake_repo = Mock()
-        fake_repo.update_user_service.return_value = f"User {self.update_user_name} updated successfully", None, 200
+#     def test_update_user_service(self):
+#         fake_repo = Mock()
+#         fake_repo.update_user_service.return_value = f"User {self.update_user_name} updated successfully", None, 200
 
-        result, error, status = fake_repo.update_user_service(1, self.update_user_name, self.update_password)
+#         result, error, status = fake_repo.update_user_service(1, self.update_user_name, self.update_password)
 
-        print(result, error, status, "Test Update User Service")
-        assert error is None
-        assert status == 200
-        assert result == f"User {self.update_user_name} updated successfully"
+#         print(result, error, status, "Test Update User Service")
+#         assert error is None
+#         assert status == 200
+#         assert result == f"User {self.update_user_name} updated successfully"
 
-    def test_delete_user_service(self):
-        fake_repo = Mock()
-        fake_repo.delete_user_service.return_value = f"User {self.update_user_name} deleted successfully", None, 200
+#     def test_delete_user_service(self):
+#         fake_repo = Mock()
+#         fake_repo.delete_user_service.return_value = f"User {self.update_user_name} deleted successfully", None, 200
 
-        result, error, status = fake_repo.delete_user_service(1)
+#         result, error, status = fake_repo.delete_user_service(1)
 
-        print(result, error, status, "Test Delete User Service")
-        assert error is None
-        assert status == 200
-        assert result == f"User {self.update_user_name} deleted successfully"
+#         print(result, error, status, "Test Delete User Service")
+#         assert error is None
+#         assert status == 200
+#         assert result == f"User {self.update_user_name} deleted successfully"
 
 
 
@@ -701,7 +699,7 @@ from app.repositories.user_repository import UserRepository
 # ├── test_auth_service.py
 # ├── test_user_routes.py
 
-@pytest.mark.service()
+@pytest.mark.repo()
 class Test_Repository_Layer:
 
 # repository ka kaam hi DB access hai.
@@ -764,7 +762,7 @@ class Test_Repository_Layer:
 # OR
 # Fixture issue
 
-@pytest.mark.servicing()
+@pytest.mark.integration()
 def test_testing():
     fake_repo = Mock()
 
@@ -897,6 +895,26 @@ def test_addition(a, b, expected):
 ####################################CI/CD Testing with GitHub Actions(continous integration and continuous deployment)
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+
+
+####################################Test Strategy for a Real Backend Project
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# Route Layer : Integration Test
+# Service Layer : Unit Test (with mocks.)
+# Repository Layer : Integration Test(with test DB.)
+
+
+####################################Real Backend Test Architecture
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+# test_login_success
+# test_login_username_required
+# test_login_password_required
+# test_login_username_and_password_required
+# test_login_user_not_found
+# test_login_invalid_password
+# test_login_returns_access_token
+# test_login_repository_failure
 
 
 
