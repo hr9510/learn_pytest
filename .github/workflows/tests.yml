@@ -12,7 +12,6 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          # Yahan version badha kar 3.10 ya 3.11 karein
           python-version: '3.12' 
       
       - name: Install dependencies
@@ -22,3 +21,4 @@ jobs:
         run: pytest
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}   
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}   
