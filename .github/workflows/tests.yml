@@ -12,7 +12,8 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          # Yahan version badha kar 3.10 ya 3.11 karein
+          python-version: '3.12' 
       
       - name: Install dependencies
         run: pip install -r requirements.txt
@@ -20,5 +21,4 @@ jobs:
       - name: Run Tests
         run: pytest
         env:
-          # Yeh line secret ko environment variable mein map karti hai
           DATABASE_URL: ${{ secrets.DATABASE_URL }}   
