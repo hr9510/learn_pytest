@@ -5,7 +5,7 @@ load_dotenv()
 class Config:
     SQLALCHEMY_DATABASE_URI = "sqlite:///test.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    JWT_SECRET_KEY = "super_secret_complex_key_length_more_than_32_chars_xyz"
 
     
 # # ❌ Kamzor Key (Example)
