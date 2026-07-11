@@ -1,27 +1,24 @@
-name: Run Tests
+name: Flask CI
 
-on:
-  push:
-
-  pull_request:
+on: [push]
 
 jobs:
-
   test:
-
     runs-on: ubuntu-latest
-
+    
     steps:
-
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.12"
-
-      - run: |
-          pip install -r requirements.txt
-
-      - run: |
-          pytest --cov=app
+          python-version: '3.9'
+      
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      
+      - name: Run Tests
+        run: pytest
+        env:
+          # Yeh line secret ko environment variable mein map karti hai
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}   
